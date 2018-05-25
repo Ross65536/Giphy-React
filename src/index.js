@@ -1,19 +1,10 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import React from 'react';
 
+// bootstrap
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/css/bootstrap-theme.css';
 
-class Page extends React.Component {
+import App from './App';
 
-    render() {
-
-        return (
-        <p> HI </p>
-        );
-    }
-}
-
-ReactDOM.render(
-    <Page />,
-    document.getElementById('root')
-);
+ReactDOM.render(<App />, document.getElementById('root'));
