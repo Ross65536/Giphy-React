@@ -2,18 +2,22 @@
   "name": "react-giphy",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://Ross65536.github.io/Giphy-React",
   "dependencies": {
     "bootstrap": "^3.3.7",
+    "gh-pages": "^1.1.0",
     "react": "^16.4.0",
     "react-bootstrap": "^0.32.1",
     "react-dom": "^16.4.0",
     "react-scripts": "1.1.4"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "build-css": "node-less-chokidar src",
     "watch-css": "node-less-chokidar src --watch",
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "npm run build-css && react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }
