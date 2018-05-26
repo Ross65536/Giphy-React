@@ -1,8 +1,33 @@
 @import "bootstrap-values";
 
+.xs-to-sm {
+    display: none;
+    @media @d-xs, @d-sm {
+        display: initial;
+    }
+}
+
+.responsive-breakable {
+    word-wrap: break-word;
+    width: 10px;
+}
+
+.superfluous-text {
+    @media @d-xs, @d-sm {
+        display: none;
+    }
+}
+
 #header-search {
     input, button {
         border-radius: 0;
+    }
+
+    #search-input {
+        width: 35vw;
+        @media @d-xs, @d-sm {
+            width: 20vw;
+        }
     }
 }
 
@@ -25,4 +50,10 @@
     position:absolute;
     bottom:10px;
     right:10px;
+}
+
+@media @d-xs {
+    .resizable-text {
+        font-size: 0.2em;
+    }
 }

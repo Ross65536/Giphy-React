@@ -72,6 +72,8 @@ const BOOKMARKS_NAME = "giphy-bookmarks";
 class BookmarkButton extends Component {
     render() {
 
+        let bookmarkIcon = <span className="xs-to-sm"> { this.props.bBookmarksOpen ? <i className="fas fa-book-open"></i> : <i className="fas fa-book"></i> } </span>;
+
         let bookmarksSuffix = this.props.bookmarksLength;
         bookmarksSuffix = bookmarksSuffix === 0 ? "" : ` (${bookmarksSuffix})`;
         let bookmarksPrefix = this.props.bBookmarksOpen ? "Close " : "Open ";
@@ -80,9 +82,11 @@ class BookmarkButton extends Component {
 
         return (
             <button type="button" className={`btn ${bookmarkButtonColor}`} onClick={this.props.toggleBookmarksPage}>
-                {bookmarksPrefix}
-                Bookmarks
-                {/* {bookMarkIcon} */}
+                <span className="superfluous-text">
+                    {bookmarksPrefix}
+                    Bookmarks
+                </span>
+                {bookmarkIcon}
                 {bookmarksSuffix}
             </button>
         );
@@ -269,9 +273,9 @@ class MainPage extends Component {
             <div>
                 {/* Header */}
                 <nav className="navbar navbar-light bg-light justify-content-between sticky-top">
-                    <a className="navbar-brand"><b>Giphy Bookmarks</b></a>
+                    <a className="navbar-brand"><b className="responsive-breakable">Giphy-Marks</b></a>
                     <form className="form-inline" id="header-search" role="search" onSubmit={this.handleSubmit}>
-                        <input type="text" className="form-control" placeholder="Search" onChange={this.handleSearchChange} />
+                        <input id="search-input" type="text" className="form-control" placeholder="Search" onChange={this.handleSearchChange} />
                         <button type="submit" className="btn btn-default">
                             <i className="fas fa-search"></i>
                         </button>
