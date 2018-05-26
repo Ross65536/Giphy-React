@@ -37,7 +37,9 @@ class GifCard extends Component {
 
         return (
             <div className="card">
+                <a href={this.props.giphy.bitly_url}>
                 <img className="card-img-top" src={this.props.giphy.images.downsized.url} alt="card gif" />
+                </a>
                 <a href="/" className="btn btn-primary card-button" onClick={this.toggleBookmark}>
                     {bookMarkIcon}
                 </a>
@@ -190,6 +192,8 @@ class MainPage extends Component {
 
         const callback = (responseObj) => {
             const dataArr = responseObj.data;
+
+            console.log(dataArr);
 
             this.setState({
                 ...this.state,
