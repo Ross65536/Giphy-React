@@ -280,11 +280,11 @@ class MainPage extends Component {
         return (
             <div className="max-container">
                 {/* Header */}
-                <nav className="navbar navbar-light bg-light justify-content-between sticky-top" id="header">
+                <nav className="navbar navbar-light justify-content-between sticky-top" id="header">
                     <a className="navbar-brand"><b className="responsive-breakable">{process.env.REACT_APP_APP_NAME}</b></a>
                     <form className="form-inline" id="header-search" role="search" onSubmit={this.handleSubmit}>
                         <input id="search-input" type="text" className="form-control" placeholder="Search" onChange={this.handleSearchChange} />
-                        <button type="submit" className="btn btn-default">
+                        <button type="submit" className="btn btn-default bg-primary">
                             <i className="fas fa-search"></i>
                         </button>
                     </form>
