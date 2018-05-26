@@ -68,6 +68,28 @@ class GifIndex extends Component {
 
 const BOOKMARKS_NAME = "giphy-bookmarks";
 
+
+class BookmarkButton extends Component {
+    render() {
+
+        let bookMarkIcon = this.props.bBookmarksOpen ?  <i className="fas fa-bookmark"></i> : <i className="far fa-bookmark"></i>;
+        
+        let bookmarksSuffix = this.props.bookmarksLength;
+        bookmarksSuffix = bookmarksSuffix == 0 ? "" : ` (${bookmarksSuffix})`;
+        let bookmarksPrefix = this.props.bBookmarksOpen ? "Close " : "Open ";
+
+        let buttonBody = `${ bookmarksPrefix } Bookmarks ${ bookmarksSuffix }`;
+
+        const bookmarkButtonColor = this.props.bBookmarksOpen ? "btn-primary" : "btn-secondary";
+        
+        return (
+            <button type="button" className={`btn ${bookmarkButtonColor}`}  onClick={ this.props.toggleBookmarksPage }>
+                        { buttonBody }
+                    </button>
+        );
+    }
+}
+
 class MainPage extends Component {
 
     constructor(props) {
@@ -195,7 +217,6 @@ class MainPage extends Component {
     toggleBookmarksPage() {
         const neg = ! this.state.bBookmarksOpen;
         this.setBookmarksOpen(neg);
-        console.log(this.state.bookmarks);
     }
 
     render() {
@@ -217,11 +238,7 @@ class MainPage extends Component {
                             <i className="fas fa-search"></i>
                         </button>
                     </form>
-                    <button type="button" className={`btn ${bookmarkButtonColor}`}  onClick={ this.toggleBookmarksPage.bind(this) }>
-                        Bookmarks 
-                        { bookmarksPrefix }
-                        {/* {bookMarkIcon} */}
-                    </button>
+                    <BookmarkButton bBookmarksOpen={this.state.bBookmarksOpen} bookmarksLength={this.state.bookmarks.length} toggleBookmarksPage={this.toggleBookmarksPage.bind(this)} />
                 </nav>
 
                 {/* Body */}
