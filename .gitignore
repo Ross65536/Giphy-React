@@ -4,8 +4,9 @@
 src/**/*.css
 src/**/*.map
 
-.*
+
 ./**/.gitignore
+.vscode
 
 # dependencies
 /node_modules

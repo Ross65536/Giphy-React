@@ -5,7 +5,7 @@ import './App.css'
 // for ajax
 import $ from 'jquery';
 
-const GIPHY_SEARCH = 'https://api.giphy.com/v1/gifs/search';
+const GIPHY_SEARCH = `${process.env.REACT_APP_GIPHY_API_ROOT}/${process.env.REACT_APP_GIPHY_API_SEARCH}`;
 
 function appendURIObject(url, object) {
     return url + "?" + $.param(object);
@@ -115,6 +115,7 @@ class MainPage extends Component {
         this.toggleBookmark = this.toggleBookmark.bind(this);
         this.indexOfBookmark = this.indexOfBookmark.bind(this);
         this.loadMore = this.loadMore.bind(this);
+
     }
 
     restoreBookmarks() {
@@ -171,7 +172,7 @@ class MainPage extends Component {
         
 
         let searchData = {
-            'api_key': 'iXiRTapoKR9zI25YGOU1tJGIAx8JrTr8',
+            'api_key': process.env.REACT_APP_GIPHY_KEY,
             'q': this.state.searchText,
             'limit': maxNumResults,
             'offset': offset,
@@ -196,8 +197,6 @@ class MainPage extends Component {
 
         const callback = (responseObj) => {
             const dataArr = responseObj.data;
-
-            console.log(dataArr);
 
             this.setState({
                 ...this.state,
@@ -273,7 +272,7 @@ class MainPage extends Component {
             <div>
                 {/* Header */}
                 <nav className="navbar navbar-light bg-light justify-content-between sticky-top">
-                    <a className="navbar-brand"><b className="responsive-breakable">Giphy-Marks</b></a>
+                    <a className="navbar-brand"><b className="responsive-breakable">{process.env.REACT_APP_APP_NAME}</b></a>
                     <form className="form-inline" id="header-search" role="search" onSubmit={this.handleSubmit}>
                         <input id="search-input" type="text" className="form-control" placeholder="Search" onChange={this.handleSearchChange} />
                         <button type="submit" className="btn btn-default">

@@ -5,4 +5,5 @@ import 'jquery';
 
 import MainPage from './App';
 
+
 ReactDOM.render(<MainPage />, document.getElementById('root'));
