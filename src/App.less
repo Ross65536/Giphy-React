@@ -1,10 +1,29 @@
 @import "bootstrap-values";
 
+#root, .max-container, #body {
+    display: flex;
+    flex-direction: column;
+    #root, .max-container {
+        min-height: 100vh;
+    }
+}
+
+#body {
+    flex-grow: 1;
+    justify-content: center;
+}
+
+
+
 .xs-to-sm {
     display: none;
     @media @d-xs, @d-sm {
         display: initial;
     }
+}
+
+.no-results-text {
+    font-size: 3rem;
 }
 
 .responsive-breakable {

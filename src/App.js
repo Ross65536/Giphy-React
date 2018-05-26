@@ -58,9 +58,18 @@ class GifIndex extends Component {
             image => <GifCard key={image.id} giphy={image} toggleBookmark={this.props.toggleBookmark} bContainsBookmark={this.props.containsBookmark(image)} />
         ));
 
+        let noCardsText = "";
+        if(this.props.gifs.length == 0) {
+            noCardsText = 
+                <div className="d-flex justify-content-center w-100"> <p className="text-muted no-results-text"> {this.props.emptyText} </p> </div>;
+        }
+
         return (
-            <div className="card-columns">
-                {cards}
+            <div className="w-100 h-100 mt-3">
+                <div className="card-columns">
+                    {cards}
+                </div>
+                { noCardsText }
             </div>
         );
     }
@@ -218,9 +227,9 @@ class MainPage extends Component {
 
     getBody() {
         if (this.state.bBookmarksOpen)
-            return <GifIndex gifs={this.state.bookmarks} toggleBookmark={this.toggleBookmark} containsBookmark={this.containsBookmark} />;
+            return <GifIndex emptyText="No Gifs Bookmarked yet. Try Searching some." gifs={this.state.bookmarks} toggleBookmark={this.toggleBookmark} containsBookmark={this.containsBookmark} />;
         else
-            return <GifIndex gifs={this.state.gifs} toggleBookmark={this.toggleBookmark} containsBookmark={this.containsBookmark} />;
+            return <GifIndex emptyText="Nothing to show. Try searching something." gifs={this.state.gifs} toggleBookmark={this.toggleBookmark} containsBookmark={this.containsBookmark} />;
     }
 
     setBookmarksOpen(bOpen) {
@@ -269,9 +278,9 @@ class MainPage extends Component {
 
 
         return (
-            <div>
+            <div className="max-container">
                 {/* Header */}
-                <nav className="navbar navbar-light bg-light justify-content-between sticky-top">
+                <nav className="navbar navbar-light bg-light justify-content-between sticky-top" id="header">
                     <a className="navbar-brand"><b className="responsive-breakable">{process.env.REACT_APP_APP_NAME}</b></a>
                     <form className="form-inline" id="header-search" role="search" onSubmit={this.handleSubmit}>
                         <input id="search-input" type="text" className="form-control" placeholder="Search" onChange={this.handleSearchChange} />
@@ -283,7 +292,7 @@ class MainPage extends Component {
                 </nav>
 
                 {/* Body */}
-                <div id="body" className="container mt-3 w-100">
+                <div id="body" className="container mt-3">
                     {this.getBody()}
 
                 </div>
