@@ -4,6 +4,8 @@
 src/**/*.css
 src/**/*.map
 
+.*
+./**/.gitignore
 
 # dependencies
 /node_modules
