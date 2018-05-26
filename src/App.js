@@ -13,13 +13,35 @@ function appendURIObject(url, object) {
 
 class GifCard extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = { 
+            bBookmarked: props.bContainsBookmark,
+        };
+
+        this.toggleBookmark = this.toggleBookmark.bind(this);
+
+    }
+
+    toggleBookmark(event) {
+        const bMarked = ! this.props.toggleBookmark(this.props.giphy);
+        this.setState({
+            ...this.state,
+            bBookmarked: bMarked,
+        });
+        event.preventDefault();
+    }
+
     render() {
+        let bookMarkIcon = this.state.bBookmarked ?  <i className="fas fa-bookmark"></i> : <i className="far fa-bookmark"></i>;
 
         return (
             <div className="card">
                 <img className="card-img-top" src={this.props.giphy.images.downsized.url} alt="card gif" />
                 <div className="card-body">
-                    <a href="#" className="btn btn-primary">Save GIF</a>
+                    <a href="#" className="btn btn-primary" onClick={this.toggleBookmark}>
+                        {bookMarkIcon}
+                    </a>
                 </div>
             </div>
             
@@ -27,22 +49,80 @@ class GifCard extends Component {
     }
 }
 
-class GifIndexPage extends Component {
+class GifIndex extends Component {
+
+    
+    render() {
+        const giphyObjects = this.props.gifs;
+        let cards = giphyObjects.map((
+            image => <GifCard key={image.id} giphy={image} toggleBookmark={this.props.toggleBookmark} bContainsBookmark={this.props.containsBookmark(image)}/>
+        ));
+
+        return (
+            <div className="card-columns">
+                {cards}
+            </div>
+        );
+    }
+}
+
+class MainPage extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             searchText: '',
-            searchResult: []
+            gifs: [],
+            bookmarks: [],
+            bBookmarksOpen: false,
         }
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSearchChange = this.handleSearchChange.bind(this);
+        this.containsBookmark = this.containsBookmark.bind(this);
+        this.toggleBookmark = this.toggleBookmark.bind(this);
+        this.indexOfBookmark = this.indexOfBookmark.bind(this);
+    }
 
+    indexOfBookmark(obj) {
+        const bookmarks = this.state.bookmarks;
+
+        for(let i=0; i < bookmarks.length; i++ ) {
+            const bookmark = bookmarks[i];
+            if(bookmark.id == obj.id)
+                return i;
+        }
+
+        return -1;
+    }
+
+    containsBookmark(obj) {
+        const bValue = this.indexOfBookmark(obj) >= 0;
+
+        return bValue;
+    }
+
+    toggleBookmark(obj) {
+        let modBookmarks = this.state.bookmarks.slice();
+        const index = this.indexOfBookmark(obj);
+        const bExists = index >= 0;
+        if(bExists)
+            modBookmarks.splice(index, 1); //remove
+        else 
+            modBookmarks.push(obj);
+
+        this.setState({
+            ...this.state,
+            bookmarks: modBookmarks
+        });
+        
+        return bExists;
     }
 
 
     handleSubmit(event) {
+        this.setBookmarksOpen(false);
+
         let searchData = {
             'api_key': 'iXiRTapoKR9zI25YGOU1tJGIAx8JrTr8',
             'q': this.state.searchText
@@ -54,13 +134,12 @@ class GifIndexPage extends Component {
             type: "GET",
             dataType: "json",
             success: (responseObj) => {
-                console.log(responseObj);
                 const dataArr = responseObj.data;
                 const pagination = responseObj.pagination;
 
                 this.setState({
                     ...this.state,
-                    searchResult: dataArr
+                    gifs: dataArr
                 });
             },
             error: function (xhr, ajaxOptions, thrownError) {
@@ -80,17 +159,30 @@ class GifIndexPage extends Component {
         event.preventDefault();
     }
 
-    getGifs() {
-        const giphyObjects = this.state.searchResult;
-        return giphyObjects.map((image => <GifCard key={image.id} giphy={image} />
-        ));
+    getBody() {
+        if(this.state.bBookmarksOpen)
+            return <GifIndex gifs={this.state.bookmarks} toggleBookmark={this.toggleBookmark} containsBookmark={this.containsBookmark} />;
+        else
+            return <GifIndex gifs={this.state.gifs} toggleBookmark={this.toggleBookmark} containsBookmark={this.containsBookmark} />;
     }
 
-    getBody() {
-        return this.getGifs();
+    setBookmarksOpen(bOpen) {
+        this.setState({
+            ...this.state,
+            bBookmarksOpen: bOpen
+        });
+    }
+
+    toggleBookmarksPage() {
+        const neg = ! this.state.bBookmarksOpen;
+        this.setBookmarksOpen(neg);
+        console.log(this.state.bookmarks);
     }
 
     render() {
+
+        let bookMarkIcon = this.state.bBookmarksOpen ?  <i className="fas fa-bookmark"></i> : <i className="far fa-bookmark"></i>;
+
         return (
             <div>
                 {/* Header */}
@@ -102,14 +194,14 @@ class GifIndexPage extends Component {
                             <i className="fas fa-search"></i>
                         </button>
                     </form>
-                    <button type="button" className="btn btn-primary"><i className="far fa-bookmark"></i> </button>
+                    <button type="button" className="btn btn-primary" onClick={ this.toggleBookmarksPage.bind(this) }>
+                        {bookMarkIcon}
+                    </button>
                 </nav>
 
                 {/* Body */}
                 <div id="body" className="container mt-3">
-                    <div className="card-columns">
-                        {this.getBody()}
-                    </div>
+                    {this.getBody()}
                 </div>
             </div>
         );
@@ -118,4 +210,4 @@ class GifIndexPage extends Component {
 
 
 
-export default GifIndexPage;
+export default MainPage;

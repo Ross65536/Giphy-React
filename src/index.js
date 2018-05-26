@@ -3,6 +3,6 @@ import React from 'react';
 
 import 'jquery';
 
-import GifIndexPage from './App';
+import MainPage from './App';
 
-ReactDOM.render(<GifIndexPage />, document.getElementById('root'));
+ReactDOM.render(<MainPage />, document.getElementById('root'));
