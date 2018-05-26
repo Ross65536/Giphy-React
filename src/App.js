@@ -15,7 +15,7 @@ class GifCard extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { 
+        this.state = {
             bBookmarked: props.bContainsBookmark,
         };
 
@@ -24,7 +24,7 @@ class GifCard extends Component {
     }
 
     toggleBookmark(event) {
-        const bMarked = ! this.props.toggleBookmark(this.props.giphy);
+        const bMarked = !this.props.toggleBookmark(this.props.giphy);
         this.setState({
             ...this.state,
             bBookmarked: bMarked,
@@ -33,7 +33,7 @@ class GifCard extends Component {
     }
 
     render() {
-        let bookMarkIcon = this.state.bBookmarked ?  <i className="fas fa-bookmark"></i> : <i className="far fa-bookmark"></i>;
+        let bookMarkIcon = this.state.bBookmarked ? <i className="fas fa-bookmark"></i> : <i className="far fa-bookmark"></i>;
 
         return (
             <div className="card">
@@ -42,18 +42,18 @@ class GifCard extends Component {
                     {bookMarkIcon}
                 </a>
             </div>
-            
+
         );
     }
 }
 
 class GifIndex extends Component {
 
-    
+
     render() {
         const giphyObjects = this.props.gifs;
         let cards = giphyObjects.map((
-            image => <GifCard key={image.id} giphy={image} toggleBookmark={this.props.toggleBookmark} bContainsBookmark={this.props.containsBookmark(image)}/>
+            image => <GifCard key={image.id} giphy={image} toggleBookmark={this.props.toggleBookmark} bContainsBookmark={this.props.containsBookmark(image)} />
         ));
 
         return (
@@ -70,23 +70,26 @@ const BOOKMARKS_NAME = "giphy-bookmarks";
 class BookmarkButton extends Component {
     render() {
 
-        let bookMarkIcon = this.props.bBookmarksOpen ?  <i className="fas fa-bookmark"></i> : <i className="far fa-bookmark"></i>;
-        
+        let bookMarkIcon = this.props.bBookmarksOpen ? <i className="fas fa-bookmark"></i> : <i className="far fa-bookmark"></i>;
+
         let bookmarksSuffix = this.props.bookmarksLength;
         bookmarksSuffix = bookmarksSuffix == 0 ? "" : ` (${bookmarksSuffix})`;
         let bookmarksPrefix = this.props.bBookmarksOpen ? "Close " : "Open ";
 
-        let buttonBody = `${ bookmarksPrefix } Bookmarks ${ bookmarksSuffix }`;
-
         const bookmarkButtonColor = this.props.bBookmarksOpen ? "btn-primary" : "btn-secondary";
-        
+
         return (
-            <button type="button" className={`btn ${bookmarkButtonColor}`}  onClick={ this.props.toggleBookmarksPage }>
-                        { buttonBody }
-                    </button>
+            <button type="button" className={`btn ${bookmarkButtonColor}`} onClick={this.props.toggleBookmarksPage}>
+                {bookmarksPrefix}
+                Bookmarks
+                {/* {bookMarkIcon} */}
+                {bookmarksSuffix}
+            </button>
         );
     }
 }
+
+const RESULTS_PER_PAGE = 12;
 
 class MainPage extends Component {
 
@@ -106,15 +109,16 @@ class MainPage extends Component {
         this.containsBookmark = this.containsBookmark.bind(this);
         this.toggleBookmark = this.toggleBookmark.bind(this);
         this.indexOfBookmark = this.indexOfBookmark.bind(this);
+        this.loadMore = this.loadMore.bind(this);
     }
 
     restoreBookmarks() {
         const storedJSON = window.localStorage.getItem(BOOKMARKS_NAME);
-        if(storedJSON == null)
+        if (storedJSON == null)
             return [];
         else
             return JSON.parse(storedJSON);
-        
+
     }
 
     saveBookmarksState() {
@@ -124,9 +128,9 @@ class MainPage extends Component {
     indexOfBookmark(obj) {
         const bookmarks = this.state.bookmarks;
 
-        for(let i=0; i < bookmarks.length; i++ ) {
+        for (let i = 0; i < bookmarks.length; i++) {
             const bookmark = bookmarks[i];
-            if(bookmark.id == obj.id)
+            if (bookmark.id == obj.id)
                 return i;
         }
 
@@ -143,9 +147,9 @@ class MainPage extends Component {
         let modBookmarks = this.state.bookmarks.slice();
         const index = this.indexOfBookmark(obj);
         const bExists = index >= 0;
-        if(bExists)
+        if (bExists)
             modBookmarks.splice(index, 1); //remove
-        else 
+        else
             modBookmarks.push(obj);
 
         this.setState({
@@ -153,18 +157,19 @@ class MainPage extends Component {
             bookmarks: modBookmarks
         }, this.saveBookmarksState);
 
-        
-        
+
+
         return bExists;
     }
 
-
-    handleSubmit(event) {
-        this.setBookmarksOpen(false);
+    searchRequest(sucessCallback = () => { }, offset = 0, maxNumResults = RESULTS_PER_PAGE) {
+        
 
         let searchData = {
             'api_key': 'iXiRTapoKR9zI25YGOU1tJGIAx8JrTr8',
-            'q': this.state.searchText
+            'q': this.state.searchText,
+            'limit': maxNumResults,
+            'offset': offset,
         };
         const requestURL = appendURIObject(GIPHY_SEARCH, searchData);
 
@@ -172,22 +177,27 @@ class MainPage extends Component {
             url: requestURL,
             type: "GET",
             dataType: "json",
-            success: (responseObj) => {
-                const dataArr = responseObj.data;
-                const pagination = responseObj.pagination;
-
-                this.setState({
-                    ...this.state,
-                    gifs: dataArr
-                });
-            },
+            success: (responseObj) => sucessCallback(responseObj),
             error: function (xhr, ajaxOptions, thrownError) {
                 alert("An error occured");
             }
         })
+    }
 
+    handleSubmit(event) {
+        this.setBookmarksOpen(false);
 
-        event.preventDefault();
+        const callback = (responseObj) => {
+            const dataArr = responseObj.data;
+
+            this.setState({
+                ...this.state,
+                gifs: dataArr
+            });
+        }
+
+        this.searchRequest(callback);
+
     }
 
     handleSearchChange(event) {
@@ -199,7 +209,7 @@ class MainPage extends Component {
     }
 
     getBody() {
-        if(this.state.bBookmarksOpen)
+        if (this.state.bBookmarksOpen)
             return <GifIndex gifs={this.state.bookmarks} toggleBookmark={this.toggleBookmark} containsBookmark={this.containsBookmark} />;
         else
             return <GifIndex gifs={this.state.gifs} toggleBookmark={this.toggleBookmark} containsBookmark={this.containsBookmark} />;
@@ -213,17 +223,47 @@ class MainPage extends Component {
     }
 
     toggleBookmarksPage() {
-        const neg = ! this.state.bBookmarksOpen;
+        const neg = !this.state.bBookmarksOpen;
         this.setBookmarksOpen(neg);
+    }
+
+    loadMore(e) {
+        e.preventDefault();
+
+        const offset = this.state.gifs.length;
+        
+        let callback = (responseObj) => {
+            const dataArr = responseObj.data;
+
+            const joinedGifs = this.state.gifs.concat(dataArr);
+            this.setState({
+                ...this.state,
+                gifs: joinedGifs
+            });
+        }
+        callback = callback.bind();
+
+
+        this.searchRequest(callback, offset);
     }
 
     render() {
 
-        let bookMarkIcon = this.state.bBookmarksOpen ?  <i className="fas fa-bookmark"></i> : <i className="far fa-bookmark"></i>;
+        let bookMarkIcon = this.state.bBookmarksOpen ? <i className="fas fa-bookmark"></i> : <i className="far fa-bookmark"></i>;
         let bookmarksPrefix = this.state.bookmarks.length;
         bookmarksPrefix = bookmarksPrefix == 0 ? "" : `(${bookmarksPrefix}) `;
         const bookmarkButtonColor = this.state.bBookmarksOpen ? "btn-primary" : "btn-secondary";
-        
+
+        let loadMoreButton = "";
+        if (this.state.gifs.length != 0 && ! this.state.bBookmarksOpen) {
+            loadMoreButton =
+                <div className="d-flex justify-content-center w-100 mt-4">
+                    <a href="#" className="btn btn-primary" onClick={this.loadMore}>
+                        Load More
+                </a>
+                </div>
+        }
+
 
         return (
             <div>
@@ -240,9 +280,11 @@ class MainPage extends Component {
                 </nav>
 
                 {/* Body */}
-                <div id="body" className="container mt-3">
+                <div id="body" className="container mt-3 w-100">
                     {this.getBody()}
+
                 </div>
+                {loadMoreButton}
             </div>
         );
     }
