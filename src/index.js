@@ -1,10 +1,8 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
 
-// bootstrap
-import 'bootstrap/dist/css/bootstrap.css';
-// import 'bootstrap/dist/css/bootstrap-theme.css';
+import 'jquery';
 
-import App from './App';
+import GifIndexPage from './App';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<GifIndexPage />, document.getElementById('root'));
