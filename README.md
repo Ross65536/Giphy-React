@@ -31,3 +31,7 @@ You have to build the .less files into raw css before running, using:
 ```
 $ npm run build-css
 ```
+
+### Giphy API Key
+
+You need to specify your Giphy API key in a environment variable (such as the .env file)
