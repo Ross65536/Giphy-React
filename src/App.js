@@ -66,14 +66,18 @@ class GifIndex extends Component {
     }
 }
 
+const BOOKMARKS_NAME = "giphy-bookmarks";
+
 class MainPage extends Component {
 
     constructor(props) {
         super(props);
+
+        const bookmarks = this.restoreBookmarks();
         this.state = {
             searchText: '',
             gifs: [],
-            bookmarks: [],
+            bookmarks: bookmarks,
             bBookmarksOpen: false,
         }
 
@@ -82,6 +86,19 @@ class MainPage extends Component {
         this.containsBookmark = this.containsBookmark.bind(this);
         this.toggleBookmark = this.toggleBookmark.bind(this);
         this.indexOfBookmark = this.indexOfBookmark.bind(this);
+    }
+
+    restoreBookmarks() {
+        const storedJSON = window.localStorage.getItem(BOOKMARKS_NAME);
+        if(storedJSON == null)
+            return [];
+        else
+            return JSON.parse(storedJSON);
+        
+    }
+
+    saveBookmarksState() {
+        localStorage.setItem(BOOKMARKS_NAME, JSON.stringify(this.state.bookmarks));
     }
 
     indexOfBookmark(obj) {
@@ -114,7 +131,9 @@ class MainPage extends Component {
         this.setState({
             ...this.state,
             bookmarks: modBookmarks
-        });
+        }, this.saveBookmarksState);
+
+        
         
         return bExists;
     }
@@ -199,8 +218,8 @@ class MainPage extends Component {
                         </button>
                     </form>
                     <button type="button" className={`btn ${bookmarkButtonColor}`}  onClick={ this.toggleBookmarksPage.bind(this) }>
-                        { bookmarksPrefix }
                         Bookmarks 
+                        { bookmarksPrefix }
                         {/* {bookMarkIcon} */}
                     </button>
                 </nav>
