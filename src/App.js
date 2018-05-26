@@ -38,11 +38,9 @@ class GifCard extends Component {
         return (
             <div className="card">
                 <img className="card-img-top" src={this.props.giphy.images.downsized.url} alt="card gif" />
-                <div className="card-body">
-                    <a href="#" className="btn btn-primary" onClick={this.toggleBookmark}>
-                        {bookMarkIcon}
-                    </a>
-                </div>
+                <a href="#" className="btn btn-primary card-button" onClick={this.toggleBookmark}>
+                    {bookMarkIcon}
+                </a>
             </div>
             
         );
