@@ -38,7 +38,7 @@ class GifCard extends Component {
         return (
             <div className="card">
                 <img className="card-img-top" src={this.props.giphy.images.downsized.url} alt="card gif" />
-                <a href="#" className="btn btn-primary card-button" onClick={this.toggleBookmark}>
+                <a href="/" className="btn btn-primary card-button" onClick={this.toggleBookmark}>
                     {bookMarkIcon}
                 </a>
             </div>
@@ -70,10 +70,8 @@ const BOOKMARKS_NAME = "giphy-bookmarks";
 class BookmarkButton extends Component {
     render() {
 
-        let bookMarkIcon = this.props.bBookmarksOpen ? <i className="fas fa-bookmark"></i> : <i className="far fa-bookmark"></i>;
-
         let bookmarksSuffix = this.props.bookmarksLength;
-        bookmarksSuffix = bookmarksSuffix == 0 ? "" : ` (${bookmarksSuffix})`;
+        bookmarksSuffix = bookmarksSuffix === 0 ? "" : ` (${bookmarksSuffix})`;
         let bookmarksPrefix = this.props.bBookmarksOpen ? "Close " : "Open ";
 
         const bookmarkButtonColor = this.props.bBookmarksOpen ? "btn-primary" : "btn-secondary";
@@ -86,6 +84,7 @@ class BookmarkButton extends Component {
                 {bookmarksSuffix}
             </button>
         );
+
     }
 }
 
@@ -130,7 +129,7 @@ class MainPage extends Component {
 
         for (let i = 0; i < bookmarks.length; i++) {
             const bookmark = bookmarks[i];
-            if (bookmark.id == obj.id)
+            if (bookmark.id === obj.id)
                 return i;
         }
 
@@ -185,6 +184,8 @@ class MainPage extends Component {
     }
 
     handleSubmit(event) {
+        event.preventDefault();
+
         this.setBookmarksOpen(false);
 
         const callback = (responseObj) => {
@@ -249,16 +250,11 @@ class MainPage extends Component {
 
     render() {
 
-        let bookMarkIcon = this.state.bBookmarksOpen ? <i className="fas fa-bookmark"></i> : <i className="far fa-bookmark"></i>;
-        let bookmarksPrefix = this.state.bookmarks.length;
-        bookmarksPrefix = bookmarksPrefix == 0 ? "" : `(${bookmarksPrefix}) `;
-        const bookmarkButtonColor = this.state.bBookmarksOpen ? "btn-primary" : "btn-secondary";
-
         let loadMoreButton = "";
-        if (this.state.gifs.length != 0 && ! this.state.bBookmarksOpen) {
+        if (this.state.gifs.length !== 0 && ! this.state.bBookmarksOpen) {
             loadMoreButton =
-                <div className="d-flex justify-content-center w-100 mt-4">
-                    <a href="#" className="btn btn-primary" onClick={this.loadMore}>
+                <div className="d-flex justify-content-center w-100 mt-4 mb-5">
+                    <a href="/" className="btn btn-primary" onClick={this.loadMore}>
                         Load More
                 </a>
                 </div>
