@@ -191,7 +191,7 @@ class MainPage extends Component {
             <div>
                 {/* Header */}
                 <nav className="navbar navbar-light bg-light justify-content-between sticky-top">
-                    <a className="navbar-brand">Giphy Save</a>
+                    <a className="navbar-brand"><b>Giphy Bookmarks</b></a>
                     <form className="form-inline" id="header-search" role="search" onSubmit={this.handleSubmit}>
                         <input type="text" className="form-control" placeholder="Search" onChange={this.handleSearchChange} />
                         <button type="submit" className="btn btn-default">
