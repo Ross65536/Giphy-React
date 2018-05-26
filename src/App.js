@@ -182,6 +182,10 @@ class MainPage extends Component {
     render() {
 
         let bookMarkIcon = this.state.bBookmarksOpen ?  <i className="fas fa-bookmark"></i> : <i className="far fa-bookmark"></i>;
+        let bookmarksPrefix = this.state.bookmarks.length;
+        bookmarksPrefix = bookmarksPrefix == 0 ? "" : `(${bookmarksPrefix}) `;
+        const bookmarkButtonColor = this.state.bBookmarksOpen ? "btn-primary" : "btn-secondary";
+        
 
         return (
             <div>
@@ -194,8 +198,10 @@ class MainPage extends Component {
                             <i className="fas fa-search"></i>
                         </button>
                     </form>
-                    <button type="button" className="btn btn-primary" onClick={ this.toggleBookmarksPage.bind(this) }>
-                        {bookMarkIcon}
+                    <button type="button" className={`btn ${bookmarkButtonColor}`}  onClick={ this.toggleBookmarksPage.bind(this) }>
+                        { bookmarksPrefix }
+                        Bookmarks 
+                        {/* {bookMarkIcon} */}
                     </button>
                 </nav>
 
