@@ -33,7 +33,7 @@ class GifCard extends Component {
     }
 
     render() {
-        let bookMarkIcon = this.state.bBookmarked ? <i className="fas fa-bookmark"></i> : <i className="far fa-bookmark"></i>;
+        let bookMarkIcon = this.state.bBookmarked ? <i className="fas fa-bookmark fa-2x"></i> : <i className="far fa-bookmark fa-2x"></i>;
 
         return (
             <div className="card">
